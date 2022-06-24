@@ -4,25 +4,23 @@ from .models import Category, Color, Product, Book
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    model = Category
     class Meta:
         fields = (
             'id',
             'title',
         )
-    
+        model = Category
 
 class ColorSerializer(serializers.ModelSerializer):
-    model = Color
     class Meta:
         fields = (
             'id',
             'name',
         )
+        model = Color
 
 
 class BookSerializer(serializers.ModelSerializer):
-    model = Book
     class Meta:
         fields = (
             'id',
@@ -40,10 +38,9 @@ class BookSerializer(serializers.ModelSerializer):
             'review',
             'date_created',      
         )
-    
+        model = Book
 
 class ProductSerializer(serializers.ModelSerializer):
-    model = Product
     class Meta:
         fields = (
             'id',
@@ -61,3 +58,4 @@ class ProductSerializer(serializers.ModelSerializer):
             'review',
             'date_created',
         )
+        model = Product
