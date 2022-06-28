@@ -1,27 +1,42 @@
 from rest_framework import serializers
-from .models import Category, Color, Product, Book
+from .models import BookReview, Cart, Category, Color, Product, Book, ProductReview, Size
 
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
+        model = Category
         fields = (
             'id',
             'title',
         )
-        model = Category
+
+
 
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
+        model = Color
         fields = (
             'id',
             'name',
         )
-        model = Color
+
+
+
+class SizeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Size
+        fields = (
+            'id',
+            'name',
+        )
+
 
 
 class BookSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True, many=False)
     class Meta:
+        model = Book
         fields = (
             'id',
             'title',
@@ -35,13 +50,16 @@ class BookSerializer(serializers.ModelSerializer):
             'description',
             'image',
             'status',
-            'review',
             'date_created',      
         )
-        model = Book
+
 
 class ProductSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True, many=False)
+    color = ColorSerializer(read_only=True, many=True)
+    size = SizeSerializer(read_only=True, many=True)
     class Meta:
+        model = Product
         fields = (
             'id',
             'tag',
@@ -52,10 +70,50 @@ class ProductSerializer(serializers.ModelSerializer):
             'stock',
             'sku',
             'color',
+            'size',
             'description',
             'image',
             'status',
-            'review',
             'date_created',
         )
-        model = Product
+
+class BookReviewSerializer(serializers.ModelSerializer):
+    book = BookSerializer(read_only=True, many=False)
+    class Meta:
+        model = BookReview
+        fields = (
+            'id',
+            'user_id',
+            'book',
+            'review',
+            'rating',
+            'created_on',
+        )
+
+class ProductReviewSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True, many=False)
+    class Meta:
+        model = ProductReview
+        fields = (
+            'id',
+            'user_id',
+            'product',
+            'review',
+            'rating',
+            'created_on',
+        )
+
+class CartSerializer(serializers.ModelSerializer):
+    products = ProductSerializer(read_only=True, many=True)
+    books = BookSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Cart
+        fields = (
+            'id',
+            'cart_id',
+            'books',
+            'products',
+            'quantity',
+            'created_on',
+        )
