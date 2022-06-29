@@ -7,9 +7,10 @@ from .serializers import (
     ProductReviewSerializer,
     ProductSerializer,
     BookSerializer,
+    ProfileSerializer,
     SizeSerializer
     )
-from .models import BookReview, Cart, Category, Book, Color, Product, ProductReview, Size
+from .models import BookReview, Cart, Category, Book, Color, Product, ProductReview, Profile, Size
 
 
 
@@ -91,3 +92,14 @@ class ListCart(generics.ListCreateAPIView):
 class DetailCart(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
+
+
+
+
+class ListProfile(generics.ListCreateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer

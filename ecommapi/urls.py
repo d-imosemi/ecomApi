@@ -30,4 +30,8 @@ urlpatterns = [
 
     path('carts/', ListCart.as_view(), name='carts'),
     path('carts/<int:pk>', DetailCart.as_view(), name='singlecarts'),
+
+
+    path('profiles/', ListProfile.as_view(), name='profiles'),
+    path('profiles/<int:pk>', DetailProfile.as_view(), name='singleprofile'),
 ]

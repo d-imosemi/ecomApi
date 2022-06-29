@@ -1,6 +1,6 @@
 from accounts.serializers import UserSerializer
 from rest_framework import serializers
-from .models import BookReview, Cart, Category, Color, Product, Book, ProductReview, Size
+from .models import BookReview, Cart, Category, Color, Product, Book, ProductReview, Profile, Size
 
 
 
@@ -119,5 +119,23 @@ class CartSerializer(serializers.ModelSerializer):
             'books',
             'products',
             'total',
+            'created_on',
+        )
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    cart_id = UserSerializer(read_only=True, many=False)
+
+    class Meta:
+        model = Profile
+        fields = (
+            'id',
+            'cart_id',
+            'address',
+            'zipcode',
+            'phonenumber',
+            'country',
+            'state',
+            'gender',
             'created_on',
         )

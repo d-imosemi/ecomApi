@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BookReview, Cart, Category, Color, Book, Product, ProductReview, Size
+from .models import BookReview, Cart, Category, Color, Book, Product, ProductReview, Profile, Profile, Size
 
 
 class BookReviewInline(admin.StackedInline):
@@ -51,6 +51,7 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(BookReview, BookReviewAdmin)
 admin.site.register(ProductReview,  ProductReviewAdmin)
 admin.site.register(Size)
+admin.site.register(Profile)
 
 
 

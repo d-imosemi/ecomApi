@@ -5,7 +5,13 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
+        fields = ('id', 'username', 'email', "first_name", "last_name", "date_joined", 'last_login')
+
+# AdminUser Serializer
+class AdminUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', "first_name", "last_name", "is_staff", "is_active", 'date_joined')
 
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):

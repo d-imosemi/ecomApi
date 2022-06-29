@@ -77,7 +77,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    cart_id = models.ForeignKey(User, on_delete=models.CASCADE, default=User)
+    cart_id = models.OneToOneField(User, on_delete=models.CASCADE)
     books = models.ManyToManyField(Book)
     products = models.ManyToManyField(Product)
     total = models.PositiveIntegerField(default=0)
@@ -104,6 +104,9 @@ class BookReview(models.Model):
     def __str__(self):
         return str(self.user_id)
 
+    class Meta:
+        ordering = ['user_id', '-created_on']
+
 
 
 class ProductReview(models.Model):
@@ -112,6 +115,36 @@ class ProductReview(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     review = models.TextField(max_length=250)
     rating = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5)])
+    created_on = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return str(self.user_id)
+
+    class Meta:
+        ordering = ['user_id', '-created_on']
+
+
+
+class Profile(models.Model):
+
+    COUNTRY = {
+        ('Nigeria', 'Nigeria')
+    }
+
+    GENDER = {
+        ('Male', 'Male'),
+        ('Female', 'Female')
+    }
+
+
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    address = models.CharField(max_length=250)
+    zipcode = models.PositiveBigIntegerField(default=0)
+    phonenumber = models.PositiveBigIntegerField(default=0)
+    country = models.CharField(choices=COUNTRY, max_length=20)
+    state = models.CharField(max_length=20)
+    gender = models.CharField(choices=GENDER, max_length=20)
     created_on = models.DateTimeField(auto_now_add=True)
 
 
