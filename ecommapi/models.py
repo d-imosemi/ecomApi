@@ -80,7 +80,7 @@ class Cart(models.Model):
     cart_id = models.ForeignKey(User, on_delete=models.CASCADE, default=User)
     books = models.ManyToManyField(Book)
     products = models.ManyToManyField(Product)
-    quantity = models.PositiveIntegerField(default=0)
+    total = models.PositiveIntegerField(default=0)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:

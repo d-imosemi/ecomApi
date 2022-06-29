@@ -1,3 +1,4 @@
+from accounts.serializers import UserSerializer
 from rest_framework import serializers
 from .models import BookReview, Cart, Category, Color, Product, Book, ProductReview, Size
 
@@ -78,6 +79,7 @@ class ProductSerializer(serializers.ModelSerializer):
         )
 
 class BookReviewSerializer(serializers.ModelSerializer):
+    user_id = UserSerializer(read_only=True, many=False)
     book = BookSerializer(read_only=True, many=False)
     class Meta:
         model = BookReview
@@ -91,6 +93,7 @@ class BookReviewSerializer(serializers.ModelSerializer):
         )
 
 class ProductReviewSerializer(serializers.ModelSerializer):
+    user_id = UserSerializer(read_only=True, many=False)
     product = ProductSerializer(read_only=True, many=False)
     class Meta:
         model = ProductReview
@@ -104,6 +107,7 @@ class ProductReviewSerializer(serializers.ModelSerializer):
         )
 
 class CartSerializer(serializers.ModelSerializer):
+    cart_id = UserSerializer(read_only=True, many=False)
     products = ProductSerializer(read_only=True, many=True)
     books = BookSerializer(read_only=True, many=True)
 
@@ -114,6 +118,6 @@ class CartSerializer(serializers.ModelSerializer):
             'cart_id',
             'books',
             'products',
-            'quantity',
+            'total',
             'created_on',
         )
