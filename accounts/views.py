@@ -9,10 +9,10 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated  
 
-from .serializers import AdminUserSerializer, UserSerializer, RegisterSerializer, ChangePasswordSerializer
+from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
 
 
-# USER API
+# USER API VIEW
 class ListUser(generics.ListCreateAPIView):
     # adminuserpermission
     queryset = User.objects.all()
@@ -22,19 +22,6 @@ class DetailUser(generics.RetrieveUpdateDestroyAPIView):
     # authuserpermission
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-
-# ADMINUSERLIST API
-class ListAdminUser(generics.ListCreateAPIView):
-    # adminuserpermission
-    queryset = User.objects.all()
-    serializer_class = AdminUserSerializer
-
-class DetailAdminUser(generics.RetrieveUpdateDestroyAPIView):
-    # authuserpermission
-    queryset = User.objects.all()
-    serializer_class = AdminUserSerializer
 
 
 

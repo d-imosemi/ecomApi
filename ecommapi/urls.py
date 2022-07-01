@@ -13,15 +13,8 @@ urlpatterns = [
     path('sizes/<int:pk>/', DetailSize.as_view(), name = 'singlesize'),
 
 
-    path('books/', ListBook.as_view(), name='books'),
-    path('books/<int:pk>/', DetailBook.as_view(), name='singlebook'),
-
     path('products/', ListProduct.as_view(), name='products'),
     path('products/<int:pk>', DetailProduct.as_view(), name='singleproduct'),
-
-
-    path('bookreviews/', ListBookReview.as_view(), name='bookreviews'),
-    path('bookreviews/<int:pk>', DetailBookReview.as_view(), name='singlebookreview'),
 
 
     path('productreviews/', ListProductReview.as_view(), name='productreviews'),

@@ -1,16 +1,14 @@
 from rest_framework import generics
 from .serializers import (
-    BookReviewSerializer,
     CartSerializer,
     CategorySerializer,
     ColorSerializer,
     ProductReviewSerializer,
     ProductSerializer,
-    BookSerializer,
     ProfileSerializer,
     SizeSerializer
     )
-from .models import BookReview, Cart, Category, Book, Color, Product, ProductReview, Profile, Size
+from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
 
 
 
@@ -44,17 +42,6 @@ class DetailSize(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-class ListBook(generics.ListCreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-
-class DetailBook(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-
-
-
-
 class ListProduct(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -62,16 +49,6 @@ class ListProduct(generics.ListCreateAPIView):
 class DetailProduct(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-
-
-class ListBookReview(generics.ListCreateAPIView):
-    queryset = BookReview.objects.all()
-    serializer_class = BookReviewSerializer
-
-class DetailBookReview(generics.RetrieveUpdateDestroyAPIView):
-    queryset = BookReview.objects.all()
-    serializer_class = BookReviewSerializer
 
 
 
@@ -92,7 +69,6 @@ class ListCart(generics.ListCreateAPIView):
 class DetailCart(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-
 
 
 

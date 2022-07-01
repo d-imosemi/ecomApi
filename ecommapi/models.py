@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator
 
 class Category(models.Model):
     title = models.CharField(max_length=250)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = 'categories'
@@ -15,6 +16,8 @@ class Category(models.Model):
 
 class Color(models.Model):
     name = models.CharField(max_length=15)
+    created_on = models.DateTimeField(auto_now_add=True)
+
 
 
     def __str__(self):
@@ -23,34 +26,12 @@ class Color(models.Model):
 
 class Size(models.Model):
     name = models.CharField(max_length=5)
+    created_on = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
         return self.name     
 
-
-
-
-class Book(models.Model):
-    title = models.CharField(max_length=250)
-    category = models.ForeignKey(Category,  on_delete=models.CASCADE, related_name='books')
-    author = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=13, unique=True)
-    pages = models.PositiveIntegerField(default=0)
-    initial_price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-    current_price = models.DecimalField(max_digits=7, decimal_places=2)
-    stock = models.PositiveIntegerField(default=0)
-    description = models.TextField()
-    image = models.URLField()
-    status = models.BooleanField(default=True)
-    date_created = models.DateField(auto_now_add=True)
-
-
-    class Meta:
-        ordering = ['-date_created']
-
-    def __str__(self):
-        return self.title
 
 
 class Product(models.Model):
@@ -63,14 +44,21 @@ class Product(models.Model):
     sku = models.CharField(max_length=10, blank=True, null=True)
     color = models.ManyToManyField(Color, blank=True)
     size = models.ManyToManyField(Size, blank=True)
-    description = models.TextField()
-    image = models.URLField()
+    author = models.CharField(max_length=100, blank=True)
+    isbn = models.CharField(max_length=13, unique=True, blank=True)
+    pages = models.PositiveIntegerField(default=0, blank=True, null=True)
+    description = models.TextField(max_length=250)
+    image1 = models.URLField()
+    image2 = models.URLField(null=True, blank=True)
+    image3 = models.URLField(null=True, blank=True)
+    image4 = models.URLField(null=True, blank=True)
     status = models.BooleanField(default=True)
-    date_created = models.DateField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True)
 
 
     class Meta:
-        ordering = ['-date_created']
+        ordering = ['-created_on']
 
     def __str__(self):
         return '{} {}'.format(self.tag, self.name)
@@ -78,9 +66,9 @@ class Product(models.Model):
 
 class Cart(models.Model):
     cart_id = models.OneToOneField(User, on_delete=models.CASCADE)
-    books = models.ManyToManyField(Book)
     products = models.ManyToManyField(Product)
     total = models.PositiveIntegerField(default=0)
+    updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -91,29 +79,11 @@ class Cart(models.Model):
 
 
 
-
-class BookReview(models.Model):
-
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True)
-    review = models.TextField(max_length=250)
-    rating = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5)])
-    created_on = models.DateTimeField(auto_now_add=True)
-
-
-    def __str__(self):
-        return str(self.user_id)
-
-    class Meta:
-        ordering = ['user_id', '-created_on']
-
-
-
 class ProductReview(models.Model):
 
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
-    review = models.TextField(max_length=250)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    review = models.TextField(max_length=150)
     rating = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5)])
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -139,12 +109,13 @@ class Profile(models.Model):
 
 
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)
-    address = models.CharField(max_length=250)
+    address = models.CharField(max_length=150)
     zipcode = models.PositiveBigIntegerField(default=0)
     phonenumber = models.PositiveBigIntegerField(default=0)
     country = models.CharField(choices=COUNTRY, max_length=20)
     state = models.CharField(max_length=20)
     gender = models.CharField(choices=GENDER, max_length=20)
+    updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
 

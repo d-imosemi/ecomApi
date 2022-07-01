@@ -1,6 +1,6 @@
 from accounts.serializers import UserSerializer
 from rest_framework import serializers
-from .models import BookReview, Cart, Category, Color, Product, Book, ProductReview, Profile, Size
+from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
 
 
 
@@ -10,6 +10,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'title',
+            'created_on',
         )
 
 
@@ -20,6 +21,7 @@ class ColorSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'created_on',
         )
 
 
@@ -30,28 +32,7 @@ class SizeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-        )
-
-
-
-class BookSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True, many=False)
-    class Meta:
-        model = Book
-        fields = (
-            'id',
-            'title',
-            'category',
-            'author',
-            'isbn',
-            'pages',
-            'initial_price',
-            'current_price',
-            'stock',
-            'description',
-            'image',
-            'status',
-            'date_created',      
+            'created_on',
         )
 
 
@@ -72,25 +53,19 @@ class ProductSerializer(serializers.ModelSerializer):
             'sku',
             'color',
             'size',
+            'author',
+            'isbn',
+            'pages',
             'description',
-            'image',
+            'image1',
+            'image2',
+            'image3',
+            'image4',
             'status',
-            'date_created',
-        )
-
-class BookReviewSerializer(serializers.ModelSerializer):
-    user_id = UserSerializer(read_only=True, many=False)
-    book = BookSerializer(read_only=True, many=False)
-    class Meta:
-        model = BookReview
-        fields = (
-            'id',
-            'user_id',
-            'book',
-            'review',
-            'rating',
+            'updated_on',
             'created_on',
         )
+
 
 class ProductReviewSerializer(serializers.ModelSerializer):
     user_id = UserSerializer(read_only=True, many=False)
@@ -109,16 +84,15 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     cart_id = UserSerializer(read_only=True, many=False)
     products = ProductSerializer(read_only=True, many=True)
-    books = BookSerializer(read_only=True, many=True)
 
     class Meta:
         model = Cart
         fields = (
             'id',
             'cart_id',
-            'books',
             'products',
             'total',
+            'updated_on',
             'created_on',
         )
 
@@ -137,5 +111,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             'country',
             'state',
             'gender',
+            'updated_on',
             'created_on',
         )
