@@ -2,18 +2,22 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('categories/', ListCategory.as_view(), name='categories'),
-    path('categories/<int:pk>/', DetailCategory.as_view(), name = 'singlecategory'),
+    path('list_categories/', ListCategory.as_view(), name='list_categories'),
+    path('Create_category/', CreateCategory.as_view(), name='create_categories'),
+    path('categories/<int:pk>/', DetailCategory.as_view(), name = 'single_category'),
 
-    path('colors/', ListColor.as_view(), name='colors'),
+    path('list_colors/', ListColor.as_view(), name='list_colors'),
+    path('create_color/', CreateColor.as_view(), name='create_colors'),
     path('colors/<int:pk>/', DetailColor.as_view(), name = 'singlecolor'),
 
 
-    path('sizes/', ListSize.as_view(), name='sizes'),
+    path('list_sizes/', ListSize.as_view(), name='list_sizes'),
+    path('create_size/', CreateSize.as_view(), name='Create_sizes'),
     path('sizes/<int:pk>/', DetailSize.as_view(), name = 'singlesize'),
 
 
-    path('products/', ListProduct.as_view(), name='products'),
+    path('list_products/', ListProduct.as_view(), name='list_products'),
+    path('create_products/', CreateProduct.as_view(), name='create_products'),
     path('products/<int:pk>', DetailProduct.as_view(), name='singleproduct'),
 
 
@@ -21,7 +25,9 @@ urlpatterns = [
     path('productreviews/<int:pk>', DetailProductReview.as_view(), name='singleproductreview'),
 
 
-    path('carts/', ListCart.as_view(), name='carts'),
+    path('List_carts/', ListCart.as_view(), name='list_carts'),
+    path('Create_carts/', CreateCart.as_view(), name='create_carts'),
+    
     path('cart/<int:pk>', DetailCart.as_view(), name='singlecarts'),
 
     path('cart/update-status/<int:pk>/', UpdateCartStatus.as_view(), name='cartstatus'),

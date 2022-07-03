@@ -1,32 +1,43 @@
-from multiprocessing import context
-from rest_framework import generics, permissions, serializers
+from rest_framework import generics
 from rest_framework.response import Response
 from knox.models import AuthToken
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from knox.views import LoginView as KnoxLoginView
-
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny, IsAuthenticatedOrReadOnly 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated  
 
-from .serializers import LoginSerializer, MainUserSerializer, UserSerializer, RegisterSerializer, ChangePasswordSerializer
+from .serializers import (
+    LoginSerializer, 
+    MainUserSerializer,
+    UpdateUserSerializer,
+    UserSerializer, 
+    RegisterSerializer, 
+    ChangePasswordSerializer,
+)
+
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 # USER API VIEW
-class ListUser(generics.ListCreateAPIView):
-    # adminuserpermission
+class ListUser(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAdminUser)
 
-class DetailUser(generics.RetrieveUpdateDestroyAPIView):
-    # authuserpermission
+class DeleteDetailUser(generics.DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAdminUser)
+
+class UpdateDetailUser(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UpdateUserSerializer
+    permission_classes = (IsAdminUser)
 
 
 
-# Register API
+# REGISTERATION API
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -55,15 +66,15 @@ class LoginAPI(generics.GenericAPIView):
 
 
 # User API
-class MainUser(generics.RetrieveAPIView):
-    permissions_classes = [permissions.IsAuthenticated]
+class MainUser(generics.RetrieveUpdateDestroyAPIView):
+    permissions_classes = [IsAuthenticated]
     serializer_class = MainUserSerializer
 
     def get_object(self):
         return self.request.user
 
  
-# change password API
+# Change Password API
 class ChangePasswordView(generics.UpdateAPIView):
     """
     An endpoint for changing password.

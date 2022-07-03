@@ -57,6 +57,12 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 
     ('knox.auth.TokenAuthentication',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKEND': (
+    'rest_framework.filter.SearchFilter',
+    'rest_framework.filter.OrderingFilter',
+),
     
     'SEARCH_PARAM': 'q',
     'ORDERING_PARAM': 'ordering',

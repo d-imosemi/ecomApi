@@ -1,7 +1,9 @@
-from .views import DetailUser, ListUser, RegisterAPI
+from .views import DeleteDetailUser, ListUser, UpdateDetailUser
 from django.urls import path
 
 urlpatterns = [
     path('users/', ListUser.as_view(), name='listuser'),
-    path('users/<int:pk>', DetailUser.as_view(), name='detailuser'),
+    path('update/users/<int:pk>/', UpdateDetailUser.as_view(), name='update_user'),
+    path('delete/users/<int:pk>/', DeleteDetailUser.as_view(), name='delete_user'),
+
 ]

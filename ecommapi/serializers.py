@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
 
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -13,7 +12,6 @@ class CategorySerializer(serializers.ModelSerializer):
         )
 
 
-
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
@@ -22,7 +20,6 @@ class ColorSerializer(serializers.ModelSerializer):
             'name',
             'created_on',
         )
-
 
 
 class SizeSerializer(serializers.ModelSerializer):

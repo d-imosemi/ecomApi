@@ -10,13 +10,20 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', "first_name", "last_name", 'phone_number', 'is_superuser', 'is_staff', 'is_active', 'user_permissions', "date_joined", 'last_login')
+        fields = ('id', 'email', "first_name", "last_name", 'phone_number',)
 
-# main user serializer
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('is_superuser', 'is_staff', 'is_active', "date_joined", 'last_login')
+
+
+
+# Main User Serializer
 class MainUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'phone_number')
+        fields = ('id', 'username', 'email', "first_name", "last_name", 'phone_number')
 
 
 # Register Serializer
