@@ -22,7 +22,13 @@ urlpatterns = [
 
 
     path('carts/', ListCart.as_view(), name='carts'),
-    path('carts/<int:pk>', DetailCart.as_view(), name='singlecarts'),
+    path('cart/<int:pk>', DetailCart.as_view(), name='singlecarts'),
+
+    path('cart/update-status/<int:pk>/', UpdateCartStatus.as_view(), name='cartstatus'),
+
+    path('user/<int:user_pk>/orders/', UserOrdersView.as_view(), name='user-cart'),
+
+    path('user/<int:user_pk>/order/<int:order_pk>/', UserOrdersDetail.as_view(), name='singleusercart'),
 
 
     path('profiles/', ListProfile.as_view(), name='profiles'),

@@ -1,7 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
+from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.auth import get_user_model
 
+
+User = get_user_model()
 
 class Category(models.Model):
     title = models.CharField(max_length=250)
@@ -45,7 +48,7 @@ class Product(models.Model):
     color = models.ManyToManyField(Color, blank=True)
     size = models.ManyToManyField(Size, blank=True)
     author = models.CharField(max_length=100, blank=True)
-    isbn = models.CharField(max_length=13, unique=True, blank=True)
+    isbn = models.CharField(max_length=13, blank=True, null=True)
     pages = models.PositiveIntegerField(default=0, blank=True, null=True)
     description = models.TextField(max_length=250)
     image1 = models.URLField()
@@ -65,9 +68,16 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    cart_id = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    STATUS = (
+        ('PENDING', 'Pending'),
+        ('IN_TRANSIT', 'In-transit'),
+        ('DELIVERED', 'Delivered')
+    )
+    cart_id = models.ForeignKey(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     total = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS, default=STATUS[0][0])
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -81,8 +91,8 @@ class Cart(models.Model):
 
 class ProductReview(models.Model):
 
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
     review = models.TextField(max_length=150)
     rating = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5)])
     created_on = models.DateTimeField(auto_now_add=True)
@@ -111,7 +121,7 @@ class Profile(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=150)
     zipcode = models.PositiveBigIntegerField(default=0)
-    phonenumber = models.PositiveBigIntegerField(default=0)
+    phone_number = PhoneNumberField(null=False, unique=True)
     country = models.CharField(choices=COUNTRY, max_length=20)
     state = models.CharField(max_length=20)
     gender = models.CharField(choices=GENDER, max_length=20)

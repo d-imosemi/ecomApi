@@ -45,18 +45,35 @@ INSTALLED_APPS = [
     'ecommapi',
     'accounts',
 
+    # third party
     'rest_framework',
     'knox',
     'django_rest_passwordreset',
+    'phonenumber_field',
+    'drf_yasg',
 ]
 
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'knox.auth.TokenAuthentication',
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': 
+    ('knox.auth.TokenAuthentication',),
+    
+    'SEARCH_PARAM': 'q',
+    'ORDERING_PARAM': 'ordering',
 }
 
+AUTH_USER_MODEL  = "accounts.User"
 
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

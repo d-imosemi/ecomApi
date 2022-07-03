@@ -1,4 +1,3 @@
-from accounts.serializers import UserSerializer
 from rest_framework import serializers
 from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
 
@@ -37,9 +36,6 @@ class SizeSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True, many=False)
-    color = ColorSerializer(read_only=True, many=True)
-    size = SizeSerializer(read_only=True, many=True)
     class Meta:
         model = Product
         fields = (
@@ -68,8 +64,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductReviewSerializer(serializers.ModelSerializer):
-    user_id = UserSerializer(read_only=True, many=False)
-    product = ProductSerializer(read_only=True, many=False)
+    user_id = serializers.SerializerMethodField()
     class Meta:
         model = ProductReview
         fields = (
@@ -81,36 +76,77 @@ class ProductReviewSerializer(serializers.ModelSerializer):
             'created_on',
         )
 
-class CartSerializer(serializers.ModelSerializer):
-    cart_id = UserSerializer(read_only=True, many=False)
-    products = ProductSerializer(read_only=True, many=True)
+        read_only_fields = ['user_id']
+    def get_user_id(self, obj):
+        return obj.user_id.username
 
+
+class CreateCartSerializer(serializers.ModelSerializer):
+    cart_id = serializers.SerializerMethodField()
+    status = serializers.HiddenField(default='PENDING')
+    class Meta:
+        model = Cart
+        fields = (
+            'cart_id',
+            'products',
+            'status',
+            'total',
+        )
+
+        read_only_fields = ['cart_id']
+
+    def get_cart_id(self, obj):
+        return obj.cart_id.username
+
+class CartDetailSerializer(serializers.ModelSerializer):
+    cart_id = serializers.SerializerMethodField()
+    status = serializers.CharField(default='PENDING')
+    updated_on = serializers.DateTimeField()
+    created_on = serializers.DateTimeField()
     class Meta:
         model = Cart
         fields = (
             'id',
             'cart_id',
             'products',
+            'status',
             'total',
             'updated_on',
             'created_on',
         )
 
+        read_only_fields = ['cart_id']
+
+    def get_cart_id(self, obj):
+        return obj.cart_id.username
+
+
+class CartStatusSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = Cart
+        fields = (
+            'status',
+        )
+
+
 
 class ProfileSerializer(serializers.ModelSerializer):
-    cart_id = UserSerializer(read_only=True, many=False)
-
+    user_id = serializers.SerializerMethodField()
     class Meta:
         model = Profile
         fields = (
             'id',
-            'cart_id',
+            'user_id',
             'address',
             'zipcode',
-            'phonenumber',
+            'phone_number',
             'country',
             'state',
             'gender',
             'updated_on',
             'created_on',
         )
+        read_only_fields = ['user_id']
+
+    def get_user_id(self, obj):
+        return obj.user_id.username

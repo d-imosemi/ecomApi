@@ -1,16 +1,17 @@
-from rest_framework import generics, permissions
+from multiprocessing import context
+from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
 from knox.models import AuthToken
-from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 
 from rest_framework import status
-from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated  
 
-from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
+from .serializers import LoginSerializer, MainUserSerializer, UserSerializer, RegisterSerializer, ChangePasswordSerializer
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 # USER API VIEW
 class ListUser(generics.ListCreateAPIView):
@@ -40,18 +41,29 @@ class RegisterAPI(generics.GenericAPIView):
 
 
 # Login API
-class LoginAPI(KnoxLoginView):
-    permission_classes = (permissions.AllowAny,)
+class LoginAPI(generics.GenericAPIView):
+    serializer_class = LoginSerializer
 
-    def post(self, request, format=None):
-        serializer = AuthTokenSerializer(data=request.data)
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return super(LoginAPI, self).post(request, format=None)
+        user = serializer.validated_data
+        return Response({
+            'user': UserSerializer(user, context=self.get_serializer_context()).data,
+            'token': AuthToken.objects.create(user)[1]
+        })
+
+
+# User API
+class MainUser(generics.RetrieveAPIView):
+    permissions_classes = [permissions.IsAuthenticated]
+    serializer_class = MainUserSerializer
+
+    def get_object(self):
+        return self.request.user
 
  
-
+# change password API
 class ChangePasswordView(generics.UpdateAPIView):
     """
     An endpoint for changing password.
@@ -85,3 +97,5 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
