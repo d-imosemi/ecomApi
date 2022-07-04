@@ -13,7 +13,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Ecomm API",
       default_version='v1',
-      description="This is a mini Ecommerce API",
+      description="A Rest API for a mini Ecommerce API",
       contact=openapi.Contact(email="imosemij@gmail.com"),
    ),
    public=True,
@@ -24,17 +24,17 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('ecommapi.urls')),
-    path('api/', include('accounts.urls')),
+    path('auth/', include('accounts.urls')),
     
-    path('api/register/', RegisterAPI.as_view(), name='register'),
-    path('api/login/', LoginAPI.as_view(), name='login'),
-    path('api/user/', MainUser.as_view()),
-    path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
-    path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
+    path('auth/register/', RegisterAPI.as_view(), name='register'),
+    path('auth/login/', LoginAPI.as_view(), name='login'),
+    path('auth/main_user/', MainUser.as_view()),
+    path('auth/logout/', knox_views.LogoutView.as_view(), name='logout'),
+    path('auth/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
 
 
-    path('api/change-password/', ChangePasswordView.as_view(), name='change-password'),
-    path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('auth/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 
 
     path('swagger<format>.json|.yaml', schema_view.without_ui(cache_timeout=0), name='schema-json'),

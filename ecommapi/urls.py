@@ -21,7 +21,8 @@ urlpatterns = [
     path('products/<int:pk>', DetailProduct.as_view(), name='singleproduct'),
 
 
-    path('productreviews/', ListProductReview.as_view(), name='productreviews'),
+    path('productreviews/', CreateProductReview.as_view(), name='productreviews'),
+    path('list_productreviews/', ListProductReview.as_view(), name='list_productreviews'),
     path('productreviews/<int:pk>', DetailProductReview.as_view(), name='singleproductreview'),
 
 

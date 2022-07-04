@@ -92,8 +92,7 @@ class ListProduct(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
     ordering_fields  = ['created_on']
-    permission_classes = (AllowAny)
-
+    # permission_classes = (AllowAny)
 
 class CreateProduct(generics.CreateAPIView):
     queryset = Product.objects.all()
@@ -110,13 +109,18 @@ class DetailProduct(generics.RetrieveUpdateDestroyAPIView):
 
 # PRODUCT REVIEW-------ENDPOINT-----------START
 
-class ListProductReview(generics.ListCreateAPIView):
+class CreateProductReview(generics.CreateAPIView):
     queryset = ProductReview.objects.all()
     serializer_class = ProductReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
+
+class ListProductReview(generics.ListAPIView):
+    queryset = ProductReview.objects.all()
+    serializer_class = ProductReviewSerializer
+
 
 class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
     queryset = ProductReview.objects.all()

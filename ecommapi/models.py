@@ -121,7 +121,6 @@ class Profile(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=150)
     zipcode = models.PositiveBigIntegerField(default=0)
-    phone_number = PhoneNumberField(null=False, unique=True)
     country = models.CharField(choices=COUNTRY, max_length=20)
     state = models.CharField(max_length=20)
     gender = models.CharField(choices=GENDER, max_length=20)

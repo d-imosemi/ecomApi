@@ -81,6 +81,7 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 class CreateCartSerializer(serializers.ModelSerializer):
     cart_id = serializers.SerializerMethodField()
     status = serializers.HiddenField(default='PENDING')
+    # products = ProductSerializer(read_only=False, many=True)
     class Meta:
         model = Cart
         fields = (
@@ -100,6 +101,7 @@ class CartDetailSerializer(serializers.ModelSerializer):
     status = serializers.CharField(default='PENDING')
     updated_on = serializers.DateTimeField()
     created_on = serializers.DateTimeField()
+    # products = ProductSerializer(read_only=True, many=True)
     class Meta:
         model = Cart
         fields = (
@@ -136,7 +138,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             'user_id',
             'address',
             'zipcode',
-            'phone_number',
             'country',
             'state',
             'gender',
