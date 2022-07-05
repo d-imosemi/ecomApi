@@ -42,7 +42,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     initial_price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     current_price = models.DecimalField(max_digits=7, decimal_places=2)
-    stock = models.PositiveIntegerField(default=0)
+    stock = models.PositiveIntegerField(default=1)
     sku = models.CharField(max_length=10, blank=True, null=True)
     color = models.ManyToManyField(Color, blank=True)
     size = models.ManyToManyField(Size, blank=True)
