@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Category(models.Model):
-    title = models.CharField(max_length=250)
+    title = models.CharField(max_length=150)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
