@@ -131,17 +131,30 @@ class ProductReviewSerializer(serializers.ModelSerializer):
         return obj.user_id.username
 
 
+
+# class ProductCreateCartSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Product
+#         fields = (
+#             'name',
+#         )
+
+
 class CreateCartSerializer(serializers.ModelSerializer):
     cart_id = serializers.SerializerMethodField()
     status = serializers.HiddenField(default='PENDING')
-    # products = ProductSerializer(read_only=False, many=True)
+    # order_item = ProductCreateCartSerializer(read_only=False, many=False)
+    # color = ListColorSerializer(many=True, read_only=True)
+    # size = ListSizeSerializer(many=True, read_only=False)
     class Meta:
         model = Cart
         fields = (
             'cart_id',
-            'products',
+            'order_item',
+            'color',
+            'size',
             'status',
-            'total',
+            'quantity',
         )
 
         read_only_fields = ['cart_id']
@@ -160,9 +173,9 @@ class CartDetailSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'cart_id',
-            'products',
+            'order_item',
             'status',
-            'total',
+            'quantity',
             'updated_on',
             'created_on',
         )
@@ -171,6 +184,24 @@ class CartDetailSerializer(serializers.ModelSerializer):
 
     def get_cart_id(self, obj):
         return obj.cart_id.username
+
+class UpdateCartDetailSerializer(serializers.ModelSerializer):
+    cart_id = serializers.SerializerMethodField()
+    # products = ProductSerializer(read_only=True, many=True)
+    class Meta:
+        model = Cart
+        fields = (
+            'id',
+            'cart_id',
+            'order_item',
+            'quantity',
+        )
+
+        read_only_fields = ['cart_id']
+
+    def get_cart_id(self, obj):
+        return obj.cart_id.username
+
 
 
 class CartStatusSerializer(serializers.ModelSerializer):

@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
 
 
@@ -67,6 +66,7 @@ class Product(models.Model):
         return '{} {}'.format(self.tag, self.name)
 
 
+
 class Cart(models.Model):
 
     STATUS = (
@@ -75,8 +75,10 @@ class Cart(models.Model):
         ('DELIVERED', 'Delivered')
     )
     cart_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
-    total = models.PositiveIntegerField(default=0)
+    order_item = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, blank=True, null=True)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE, blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS, default=STATUS[0][0])
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -86,6 +88,9 @@ class Cart(models.Model):
 
     def __str__(self):
         return str(self.cart_id)
+
+
+
 
 
 

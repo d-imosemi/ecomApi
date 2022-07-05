@@ -12,7 +12,8 @@ from .serializers import (
     ProductReviewSerializer,
     ProductSerializer,
     ProfileSerializer,
-    SizeSerializer
+    SizeSerializer,
+    UpdateCartDetailSerializer
     )
 from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
 
@@ -125,6 +126,7 @@ class CreateProductReview(generics.CreateAPIView):
 class ListProductReview(generics.ListAPIView):
     queryset = ProductReview.objects.all()
     serializer_class = ProductReviewSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
@@ -141,22 +143,23 @@ class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
 
 # CART-------ENDPOINT-----------START
 
+
 class CreateCart(generics.CreateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CreateCartSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(cart_id=self.request.user)
 
 class ListCart(generics.ListAPIView):
     queryset = Cart.objects.all()
-    serializer_class = CreateCartSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = CartDetailSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 class DetailCart(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
-    serializer_class = CartDetailSerializer
+    serializer_class = UpdateCartDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
@@ -171,7 +174,7 @@ class UpdateCartStatus(generics.UpdateAPIView):
 class UserOrdersView(generics.GenericAPIView):
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, user_pk):
         user = User.objects.get(pk=user_pk)
@@ -186,7 +189,7 @@ class UserOrdersView(generics.GenericAPIView):
 class UserOrdersDetail(generics.GenericAPIView):
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, user_pk, order_pk):
         user = User.objects.get(pk=user_pk)
@@ -206,7 +209,7 @@ class UserOrdersDetail(generics.GenericAPIView):
 class ListProfile(generics.ListCreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
     
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
