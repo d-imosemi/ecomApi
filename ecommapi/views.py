@@ -19,6 +19,9 @@ from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
 User = get_user_model()
 
 
+class HelloAuthView(generics.GenericAPIView):
+    def get(self, request):
+        return Response(data={'message': 'Hello'}, status=status.HTTP_200_ok)
 
 # CATEGORY-------ENDPOINT-----------START
 class ListCategory(generics.ListAPIView):

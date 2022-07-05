@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    path('', HelloAuthView.as_view(), name='home'),
     path('list_categories/', ListCategory.as_view(), name='list_categories'),
     path('Create_category/', CreateCategory.as_view(), name='create_categories'),
     path('categories/<int:pk>/', DetailCategory.as_view(), name = 'single_category'),

@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -127,8 +127,8 @@ if DEBUG:
     }
 
 else:
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-    DATABASES['default'] = dj_database_url.config(default=config('DATABASE_URL'))
+    DATABASES = { 'default': dj_database_url.config(conn_max_age=500, ssl_require=True) }
+    DATABASES = { 'default': dj_database_url.config('DATABASE_URL') }
 
 
 # Password validation
