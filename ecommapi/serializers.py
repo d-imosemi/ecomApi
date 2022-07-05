@@ -174,6 +174,8 @@ class CartDetailSerializer(serializers.ModelSerializer):
             'id',
             'cart_id',
             'order_item',
+            'color',
+            'size',
             'status',
             'quantity',
             'updated_on',
@@ -194,6 +196,8 @@ class UpdateCartDetailSerializer(serializers.ModelSerializer):
             'id',
             'cart_id',
             'order_item',
+            'color',
+            'size',
             'quantity',
         )
 

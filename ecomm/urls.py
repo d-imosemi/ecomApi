@@ -28,6 +28,8 @@ urlpatterns = [
     
     path('auth/register/', RegisterAPI.as_view(), name='register'),
     path('auth/login/', LoginAPI.as_view(), name='login'),
+
+    
     path('auth/main_user/', MainUser.as_view()),
     path('auth/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('auth/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
