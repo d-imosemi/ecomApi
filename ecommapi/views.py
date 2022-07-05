@@ -1,6 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny, IsAuthenticatedOrReadOnly 
+from rest_framework import generics, status, permissions
 from rest_framework import filters
 from django.contrib.auth import get_user_model
 from .serializers import (
@@ -9,6 +8,7 @@ from .serializers import (
     CategorySerializer,
     ColorSerializer,
     CreateCartSerializer,
+    ListProductSerializer,
     ProductReviewSerializer,
     ProductSerializer,
     ProfileSerializer,
@@ -27,17 +27,17 @@ class HelloAuthView(generics.GenericAPIView):
 class ListCategory(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (AllowAny)
+    permission_classes = [permissions.AllowAny]
 
 class CreateCategory(generics.CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 class DetailCategory(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 # CATEGORY-------ENDPOINT-----------END
 
@@ -47,19 +47,20 @@ class DetailCategory(generics.RetrieveUpdateDestroyAPIView):
 class ListColor(generics.ListAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
-    permission_classes = (AllowAny)
+    permission_classes = [permissions.AllowAny]
+
 
 
 class CreateColor(generics.CreateAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 
 class DetailColor(generics.RetrieveUpdateDestroyAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 # COLOR-------ENDPOINT-----------END
 
@@ -70,18 +71,19 @@ class DetailColor(generics.RetrieveUpdateDestroyAPIView):
 class ListSize(generics.ListAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
-    permission_classes = (AllowAny)
+    permission_classes = [permissions.AllowAny]
+
 
 class CreateSize(generics.CreateAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 
 class DetailSize(generics.RetrieveUpdateDestroyAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 # SIZE-------ENDPOINT-----------END
 
@@ -91,21 +93,21 @@ class DetailSize(generics.RetrieveUpdateDestroyAPIView):
 
 class ListProduct(generics.ListAPIView):
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ListProductSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
     ordering_fields  = ['created_on']
-    # permission_classes = (AllowAny)
 
 class CreateProduct(generics.CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 class DetailProduct(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = (IsAdminUser)
+    serializer_class = ListProductSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 # PRODUCT-------ENDPOINT-----------END
 
@@ -115,7 +117,7 @@ class DetailProduct(generics.RetrieveUpdateDestroyAPIView):
 class CreateProductReview(generics.CreateAPIView):
     queryset = ProductReview.objects.all()
     serializer_class = ProductReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
@@ -128,7 +130,7 @@ class ListProductReview(generics.ListAPIView):
 class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
     queryset = ProductReview.objects.all()
     serializer_class = ProductReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_update(self, serializer):
         serializer.save(user_id=self.request.user)
@@ -142,7 +144,7 @@ class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
 class CreateCart(generics.CreateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CreateCartSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(cart_id=self.request.user)
@@ -150,12 +152,12 @@ class CreateCart(generics.CreateAPIView):
 class ListCart(generics.ListAPIView):
     queryset = Cart.objects.all()
     serializer_class = CreateCartSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class DetailCart(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartDetailSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
         serializer.save(cart_id=self.request.user)
@@ -163,13 +165,13 @@ class DetailCart(generics.RetrieveUpdateDestroyAPIView):
 class UpdateCartStatus(generics.UpdateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartStatusSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class UserOrdersView(generics.GenericAPIView):
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, user_pk):
         user = User.objects.get(pk=user_pk)
@@ -184,7 +186,7 @@ class UserOrdersView(generics.GenericAPIView):
 class UserOrdersDetail(generics.GenericAPIView):
     serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, user_pk, order_pk):
         user = User.objects.get(pk=user_pk)
@@ -204,7 +206,7 @@ class UserOrdersDetail(generics.GenericAPIView):
 class ListProfile(generics.ListCreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
@@ -212,7 +214,7 @@ class ListProfile(generics.ListCreateAPIView):
 class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
         serializer.save(user_id=self.request.user)

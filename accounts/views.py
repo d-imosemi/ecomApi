@@ -1,9 +1,7 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated 
 from drf_yasg.utils import swagger_auto_schema 
 
 from .serializers import (
@@ -15,7 +13,6 @@ from .serializers import (
     ChangePasswordSerializer,
 )
 
-from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
 
 
@@ -27,18 +24,18 @@ User = get_user_model()
 class ListUser(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 class DeleteDetailUser(generics.DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 
 class UpdateDetailUser(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UpdateUserSerializer
-    permission_classes = (IsAdminUser)
+    permission_classes = [permissions.IsAdminUser]
 
 
 
@@ -74,7 +71,7 @@ class LoginAPI(generics.GenericAPIView):
 
 # User API
 class MainUser(generics.RetrieveUpdateDestroyAPIView):
-    permissions_classes = [IsAuthenticated]
+    permissions_classes = [permissions.IsAuthenticated]
     serializer_class = MainUserSerializer
 
     def get_object(self):
@@ -88,7 +85,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     """
     serializer_class = ChangePasswordSerializer
     model = User
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self, queryset=None):
         obj = self.request.user

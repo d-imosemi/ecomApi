@@ -31,8 +31,61 @@ class SizeSerializer(serializers.ModelSerializer):
             'created_on',
         )
 
+class ListCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'title',
+        )
+
+
+class ListColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = (
+            'name',
+        )
+
+
+class ListSizeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Size
+        fields = (
+            'name',
+        )
+
 
 class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = (
+            'id',
+            'tag',
+            'name',
+            'category',
+            'initial_price',
+            'current_price',
+            'stock',
+            'sku',
+            'color',
+            'size',
+            'author',
+            'isbn',
+            'pages',
+            'description',
+            'image1',
+            'image2',
+            'image3',
+            'image4',
+            'status',
+            'updated_on',
+            'created_on',
+        )
+
+class ListProductSerializer(serializers.ModelSerializer):
+    color = ListColorSerializer(many=True, read_only=True)
+    size = ListSizeSerializer(many=True, read_only=True)
+    category = ListCategorySerializer(many=False, read_only=True)
     class Meta:
         model = Product
         fields = (
