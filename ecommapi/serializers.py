@@ -167,7 +167,6 @@ class CartDetailSerializer(serializers.ModelSerializer):
     status = serializers.CharField(default='PENDING')
     updated_on = serializers.DateTimeField()
     created_on = serializers.DateTimeField()
-    # products = ProductSerializer(read_only=True, many=True)
     class Meta:
         model = Cart
         fields = (
@@ -189,7 +188,6 @@ class CartDetailSerializer(serializers.ModelSerializer):
 
 class UpdateCartDetailSerializer(serializers.ModelSerializer):
     cart_id = serializers.SerializerMethodField()
-    # products = ProductSerializer(read_only=True, many=True)
     class Meta:
         model = Cart
         fields = (

@@ -35,6 +35,7 @@ class DeleteDetailUser(generics.DestroyAPIView):
 class UpdateDetailUser(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UpdateUserSerializer
+    http_method_names = ['get', 'post', 'put']
     permission_classes = [permissions.IsAdminUser]
 
 
@@ -72,6 +73,7 @@ class LoginAPI(generics.GenericAPIView):
 # User API
 class MainUser(generics.RetrieveUpdateDestroyAPIView):
     permissions_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'post', 'put', 'delete']
     serializer_class = MainUserSerializer
 
     def get_object(self):
@@ -86,6 +88,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     model = User
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'post', 'put']
 
     def get_object(self, queryset=None):
         obj = self.request.user
