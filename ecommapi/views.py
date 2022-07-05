@@ -157,14 +157,29 @@ class ListCart(generics.ListAPIView):
     serializer_class = CartDetailSerializer
     permission_classes = [permissions.IsAdminUser]
 
-class DetailCart(generics.RetrieveUpdateDestroyAPIView):
+class DetailCart(generics.UpdateAPIView):
     queryset = Cart.objects.all()
     serializer_class = UpdateCartDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
         serializer.save(cart_id=self.request.user)
+       
+    
+    
+class DetailCart(generics.DestroyAPIView):
 
+    queryset = Cart.objects.all()
+
+    serializer_class = UpdateCartDetailSerializer
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_update(self, serializer):
+        serializer.save(cart_id=self.request.user)
+
+        
+        
 class UpdateCartStatus(generics.UpdateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartStatusSerializer
