@@ -127,7 +127,7 @@ if DEBUG:
     }
 
 else:
-    DATABASES = { 'default': dj_database_url.config(conn_max_age=500, ssl_require=True) }
+    DATABASES = { 'default': dj_database_url.config(conn_max_age=500) }
     DATABASES = { 'default': dj_database_url.config('DATABASE_URL') }
 
 
