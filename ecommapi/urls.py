@@ -41,6 +41,5 @@ urlpatterns = [
 
 
 
-    # path('profiles/', ListProfile.as_view(), name='profiles'),
     path('profile/<int:pk>', DetailProfile.as_view(), name='singleprofile'),
 ]

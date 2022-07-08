@@ -216,21 +216,21 @@ class CartStatusSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user_id = serializers.SerializerMethodField()
+    # user_id = serializers.SerializerMethodField()
     class Meta:
         model = Profile
         fields = (
             'id',
-            'user_id',
+            # 'user_id',
             'address',
             'zipcode',
             'country',
             'state',
             'gender',
-            'updated_on',
-            'created_on',
+            # 'updated_on',
+            # 'created_on',
         )
-        read_only_fields = ['user_id']
+    #     read_only_fields = ['user_id']
 
-    def get_user_id(self, obj):
-        return obj.user_id.username
+    # def get_user_id(self, obj):
+    #     return obj.user_id.username
