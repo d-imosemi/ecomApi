@@ -73,7 +73,7 @@ class LoginAPI(generics.GenericAPIView):
 # User API
 class MainUser(generics.RetrieveUpdateDestroyAPIView):
     permissions_classes = [permissions.IsAuthenticated]
-    http_method_names = ['get', 'post', 'put', 'delete']
+    http_method_names = ['get', 'put', 'delete']
     serializer_class = MainUserSerializer
 
     def get_object(self):

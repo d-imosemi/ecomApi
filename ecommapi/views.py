@@ -217,21 +217,10 @@ class UserOrdersDetail(generics.GenericAPIView):
 
 
 
-
-# PROFILE-------ENDPOINT-----------START
-
-# class ListProfile(generics.ListCreateAPIView):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializer
-#     permission_classes = [permissions.IsAdminUser]
-    
-#     def perform_create(self, serializer):
-#         serializer.save(user_id=self.request.user)
-
 class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    http_method_names = ['get', 'post', 'put', 'delete']
+    http_method_names = ['get', 'put', 'delete']
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
