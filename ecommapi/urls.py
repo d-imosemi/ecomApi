@@ -19,12 +19,12 @@ urlpatterns = [
 
     path('list_products/', ListProduct.as_view(), name='list_products'),
     path('create_product/', CreateProduct.as_view(), name='create_product'),
-    path('product/<int:pk>', DetailProduct.as_view(), name='singleproduct'),
+    path('product/<int:pk>/', DetailProduct.as_view(), name='singleproduct'),
 
 
     path('productreview/', CreateProductReview.as_view(), name='productreview'),
     # path('list_productreviews/', ListProductReview.as_view(), name='list_productreviews'),
-    path('productreview/<int:pk>', DetailProductReview.as_view(), name='singleproductreview'),
+    path('productreview/<int:pk>/', DetailProductReview.as_view(), name='singleproductreview'),
 
 
     path('List_carts/', ListCart.as_view(), name='list_carts'),

@@ -2,27 +2,15 @@ from rest_framework.response import Response
 from rest_framework import generics, status, permissions
 from rest_framework import filters
 from django.contrib.auth import get_user_model
-from .serializers import (
-    CartDetailSerializer,
-    CartStatusSerializer,
-    CategorySerializer,
-    ColorSerializer,
-    CreateCartSerializer,
-    ListProductSerializer,
-    ProductReviewSerializer,
-    ProductSerializer,
-    ProfileSerializer,
-    SizeSerializer,
-    UpdateCartDetailSerializer
-    )
-from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
+from .serializers import *
+from .models import *
 
 User = get_user_model()
 
 
 class HelloAuthView(generics.GenericAPIView):
     def get(self, request):
-        return Response(data={'message': 'Hello'}, status=status.HTTP_200_ok)
+        return Response(data={'message': 'Welcome to the Ecommerce API'}, status=status.HTTP_204_NO_CONTENT)
 
 # CATEGORY-------ENDPOINT-----------START
 class ListCategory(generics.ListAPIView):
@@ -100,7 +88,6 @@ class ListProduct(generics.ListAPIView):
     serializer_class = ListProductSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
-    ordering_fields  = ['created_on']
 
 class CreateProduct(generics.CreateAPIView):
     queryset = Product.objects.all()

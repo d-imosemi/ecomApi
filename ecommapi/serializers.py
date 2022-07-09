@@ -1,14 +1,12 @@
 from rest_framework import serializers
-from .models import Cart, Category, Color, Product, ProductReview, Profile, Size
+from .models import *
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = (
-            'id',
             'title',
-            'created_on',
         )
 
 
@@ -16,38 +14,11 @@ class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
         fields = (
-            'id',
             'name',
-            'created_on',
         )
 
 
 class SizeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Size
-        fields = (
-            'id',
-            'name',
-            'created_on',
-        )
-
-class ListCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = (
-            'title',
-        )
-
-
-class ListColorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Color
-        fields = (
-            'name',
-        )
-
-
-class ListSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
         fields = (
@@ -59,7 +30,6 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = (
-            'id',
             'tag',
             'name',
             'category',
@@ -83,13 +53,12 @@ class ProductSerializer(serializers.ModelSerializer):
         )
 
 class ListProductSerializer(serializers.ModelSerializer):
-    color = ListColorSerializer(many=True, read_only=True)
-    size = ListSizeSerializer(many=True, read_only=True)
-    category = ListCategorySerializer(many=False, read_only=True)
+    color = ColorSerializer(many=True, read_only=True)
+    size = SizeSerializer(many=True, read_only=True)
+    category = CategorySerializer(many=False, read_only=True)
     class Meta:
         model = Product
         fields = (
-            'id',
             'tag',
             'name',
             'category',
@@ -108,8 +77,6 @@ class ListProductSerializer(serializers.ModelSerializer):
             'image3',
             'image4',
             'status',
-            'updated_on',
-            'created_on',
         )
 
 
@@ -118,12 +85,10 @@ class ProductReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductReview
         fields = (
-            'id',
             'user_id',
             'product',
             'review',
             'rating',
-            'created_on',
         )
 
         read_only_fields = ['user_id']
@@ -170,7 +135,6 @@ class CartDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = (
-            'id',
             'cart_id',
             'order_item',
             'color',
@@ -191,7 +155,6 @@ class UpdateCartDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = (
-            'id',
             'cart_id',
             'order_item',
             'color',
@@ -220,15 +183,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            'id',
             # 'user_id',
             'address',
             'zipcode',
             'country',
             'state',
             'gender',
-            # 'updated_on',
-            # 'created_on',
         )
     #     read_only_fields = ['user_id']
 
