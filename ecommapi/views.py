@@ -168,7 +168,7 @@ class UpdateDetailCart(generics.UpdateAPIView):
 class UpdateCartStatus(generics.UpdateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartStatusSerializer
-    http_method_names = ['get', 'post', 'put']
+    http_method_names = ['get', 'put']
     permission_classes = [permissions.IsAdminUser]
 
 

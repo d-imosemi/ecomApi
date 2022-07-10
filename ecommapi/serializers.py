@@ -34,7 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'name',
             'category',
             'initial_price',
-            'current_price',
+            'discount_percent',
             'stock',
             'sku',
             'color',
@@ -62,6 +62,7 @@ class ListProductSerializer(serializers.ModelSerializer):
             'tag',
             'name',
             'category',
+            'discount_percent',
             'initial_price',
             'current_price',
             'stock',
@@ -130,7 +131,6 @@ class CreateCartSerializer(serializers.ModelSerializer):
 class CartDetailSerializer(serializers.ModelSerializer):
     cart_id = serializers.SerializerMethodField()
     status = serializers.CharField(default='PENDING')
-    updated_on = serializers.DateTimeField()
     created_on = serializers.DateTimeField()
     class Meta:
         model = Cart
@@ -141,7 +141,7 @@ class CartDetailSerializer(serializers.ModelSerializer):
             'size',
             'status',
             'quantity',
-            'updated_on',
+            'total',
             'created_on',
         )
 

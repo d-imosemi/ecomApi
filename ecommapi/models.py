@@ -40,8 +40,8 @@ class Product(models.Model):
     tag = models.CharField(max_length=10)
     name = models.CharField(max_length=150)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    initial_price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-    current_price = models.DecimalField(max_digits=7, decimal_places=2)
+    initial_price = models.FloatField(default=0)
+    discount_percent = models.FloatField(default=0)
     stock = models.PositiveIntegerField(default=1)
     sku = models.CharField(max_length=10, blank=True, null=True)
     color = models.ManyToManyField(Color, blank=True)
@@ -65,6 +65,11 @@ class Product(models.Model):
     def __str__(self):
         return '{} {}'.format(self.tag, self.name)
 
+    @property
+    def current_price(self):
+        if self.discount_percent > 0:
+            discounted_price = self.initial_price - self.initial_price * self.discount_percent / 100
+            return discounted_price
 
 
 class Cart(models.Model):
@@ -89,6 +94,14 @@ class Cart(models.Model):
     def __str__(self):
         return str(self.cart_id)
 
+    @property
+    def total(self):
+        if self.order_item.discount_percent > 0:
+            price_now = self.order_item.price - self.order_item.price * self.order_item.discount_percent / 100
+        else:
+            price_now = self.order_item.price
+            total = price_now * self.quantity
+            return total
 
 
 

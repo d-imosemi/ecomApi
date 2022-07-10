@@ -27,7 +27,7 @@ urlpatterns = [
     path('productreview/<int:pk>/', DetailProductReview.as_view(), name='singleproductreview'),
 
 
-    path('List_carts/', ListCart.as_view(), name='list_carts'),
+    path('list_carts/', ListCart.as_view(), name='list_carts'),
     path('Create_cart/', CreateCart.as_view(), name='create_cart'),
     
     path('cart/<int:pk>/delete/', DeleteDetailCart.as_view(), name='Delete_singlecart'),
