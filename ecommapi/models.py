@@ -97,13 +97,13 @@ class Cart(models.Model):
     @property
     def total(self):
         if self.order_item.discount_percent > 0:
-            price_now = self.order_item.price - self.order_item.price * self.order_item.discount_percent / 100
+            price_now = self.order_item.initial_price - self.order_item.initial_price * self.order_item.discount_percent / 100
+            total = price_now * self.quantity
         else:
-            price_now = self.order_item.price
+            price_now = self.order_item.initial_price
             total = price_now * self.quantity
             return total
-
-
+        return total
 
 
 

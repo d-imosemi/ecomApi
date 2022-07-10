@@ -26,7 +26,7 @@ class ProductReviewAdmin(admin.ModelAdmin):
 
 class CartAdmin(admin.ModelAdmin):
     list_filter = ('cart_id', 'created_on',)
-    list_display = ('cart_id', 'quantity', 'created_on',)
+    list_display = ('cart_id', 'quantity','total', 'created_on',)
 
 
 
