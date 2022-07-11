@@ -5,31 +5,34 @@ from .models import *
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = (
+        fields = [
             'title',
-        )
+            'created_on',
+        ]
 
 
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
-        fields = (
+        fields = [
             'name',
-        )
+            'created_on',
+        ]
 
 
 class SizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
-        fields = (
+        fields = [
             'name',
-        )
+            'created_on',
+        ]
 
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = (
+        fields = [
             'tag',
             'name',
             'category',
@@ -50,7 +53,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'status',
             'updated_on',
             'created_on',
-        )
+        ]
 
 class ListProductSerializer(serializers.ModelSerializer):
     color = ColorSerializer(many=True, read_only=True)
@@ -58,7 +61,7 @@ class ListProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False, read_only=True)
     class Meta:
         model = Product
-        fields = (
+        fields = [
             'tag',
             'name',
             'category',
@@ -78,19 +81,22 @@ class ListProductSerializer(serializers.ModelSerializer):
             'image3',
             'image4',
             'status',
-        )
+            'created_on',
+            'updated_on',
+        ]
 
 
 class ProductReviewSerializer(serializers.ModelSerializer):
     user_id = serializers.SerializerMethodField()
     class Meta:
         model = ProductReview
-        fields = (
+        fields = [
             'user_id',
             'product',
             'review',
             'rating',
-        )
+            'created_on',
+        ]
 
         read_only_fields = ['user_id']
     def get_user_id(self, obj):
@@ -114,14 +120,15 @@ class CreateCartSerializer(serializers.ModelSerializer):
     # size = ListSizeSerializer(many=True, read_only=False)
     class Meta:
         model = Cart
-        fields = (
+        fields = [
             'cart_id',
             'order_item',
             'color',
             'size',
             'status',
             'quantity',
-        )
+            'created_on',
+        ]
 
         read_only_fields = ['cart_id']
 
@@ -134,7 +141,7 @@ class CartDetailSerializer(serializers.ModelSerializer):
     created_on = serializers.DateTimeField()
     class Meta:
         model = Cart
-        fields = (
+        fields = [
             'cart_id',
             'order_item',
             'color',
@@ -143,7 +150,7 @@ class CartDetailSerializer(serializers.ModelSerializer):
             'quantity',
             'total',
             'created_on',
-        )
+        ]
 
         read_only_fields = ['cart_id']
 
@@ -154,13 +161,14 @@ class UpdateCartDetailSerializer(serializers.ModelSerializer):
     cart_id = serializers.SerializerMethodField()
     class Meta:
         model = Cart
-        fields = (
+        fields = [
             'cart_id',
             'order_item',
             'color',
             'size',
             'quantity',
-        )
+            'updated_on',
+        ]
 
         read_only_fields = ['cart_id']
 
@@ -172,25 +180,22 @@ class UpdateCartDetailSerializer(serializers.ModelSerializer):
 class CartStatusSerializer(serializers.ModelSerializer):
      class Meta:
         model = Cart
-        fields = (
+        fields = [
             'status',
-        )
+        ]
 
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    # user_id = serializers.SerializerMethodField()
     class Meta:
         model = Profile
-        fields = (
-            # 'user_id',
+        fields = [
             'address',
             'zipcode',
             'country',
             'state',
             'gender',
-        )
-    #     read_only_fields = ['user_id']
-
-    # def get_user_id(self, obj):
-    #     return obj.user_id.username
+            'created_on',
+            'updated_on',
+        ]
+       

@@ -203,6 +203,8 @@ class UserOrdersDetail(generics.GenericAPIView):
 # CART-------ENDPOINT-----------END
 
 
+# PROFILE-------ENDPOINT-----------STATRT
+
 
 class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
