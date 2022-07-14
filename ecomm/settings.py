@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 import dj_database_url
 
 load_dotenv()
@@ -69,6 +70,17 @@ REST_FRAMEWORK = {
     
     'SEARCH_PARAM': 'q',
     'ORDERING_PARAM': 'ordering',
+}
+
+
+
+REST_KNOX = {
+  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+  'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+  'TOKEN_TTL': timedelta(hours=10),
+  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+  'TOKEN_LIMIT_PER_USER': 2,
+  'AUTO_REFRESH': False,
 }
 
 AUTH_USER_MODEL  = "accounts.User"

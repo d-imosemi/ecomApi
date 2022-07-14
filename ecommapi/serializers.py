@@ -28,6 +28,28 @@ class SizeSerializer(serializers.ModelSerializer):
             'created_on',
         ]
 
+class ShippingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shipping
+        fields = [
+            'name',
+            'price',
+            'created_on',
+        ]
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        exclude = ["updated_on", 'user_id',]
+
+
+class CreateAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        exclude = ["user_id",]
+
+
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,6 +60,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'category',
             'initial_price',
             'discount_percent',
+            'current_price',
             'stock',
             'sku',
             'color',
@@ -104,76 +127,78 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 
 
 
-# class ProductCreateCartSerializer(serializers.ModelSerializer):
+class ProductCreateCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'name',
+            'current_price',
+        ]
+
+
+class CheckoutSerializer(serializers.ModelSerializer):
+    shipping = ShippingSerializer(read_only = True)
+    class Meta:
+        model = Cart
+        fields = [
+            'shipping_location',
+            'grand_total',
+        ]
+    
+
+
+# class CartDetailSerializer(serializers.ModelSerializer):
+#     color = ColorSerializer(many=True, read_only=True)
+#     size = SizeSerializer(many=True, read_only=True)
+#     order_item = ProductCreateCartSerializer()
+#     cart_id = serializers.SerializerMethodField()
+#     status = serializers.CharField(default='PENDING')
+#     created_on = serializers.DateTimeField()
+#     grand_total = serializers.SerializerMethodField()
 #     class Meta:
-#         model = Product
-#         fields = (
-#             'name',
-#         )
+#         model = Cart
+#         fields = [
+#             'cart_id',
+#             'order_item',
+#             'color',
+#             'size',
+#             'status',
+#             'quantity',
+#             'total',
+#             'created_on',
+#             'grand_total',
+#         ]
+
+#         read_only_fields = ['cart_id']
+
+#     def get_cart_id(self, obj):
+#         return obj.cart_id.username
+    
+#     def get_grand_total(self, obj):
+#         return CheckoutSerializer(obj.grand_total()).data
 
 
-class CreateCartSerializer(serializers.ModelSerializer):
-    cart_id = serializers.SerializerMethodField()
-    status = serializers.HiddenField(default='PENDING')
-    # order_item = ProductCreateCartSerializer(read_only=False, many=False)
-    # color = ListColorSerializer(many=True, read_only=True)
-    # size = ListSizeSerializer(many=True, read_only=False)
-    class Meta:
-        model = Cart
-        fields = [
-            'cart_id',
-            'order_item',
-            'color',
-            'size',
-            'status',
-            'quantity',
-            'created_on',
-        ]
 
-        read_only_fields = ['cart_id']
 
-    def get_cart_id(self, obj):
-        return obj.cart_id.username
+# class CreateUpdateCartDetailSerializer(serializers.ModelSerializer):
+#     cart_id = serializers.SerializerMethodField()
+#     class Meta:
+#         model = Cart
+#         fields = [
+#             'cart_id',
+#             'order_item',
+#             'color',
+#             'size',
+#             'quantity',
+#             'shipping_location',
+#             'created_on',
+#             'updated_on',
+#         ]
 
-class CartDetailSerializer(serializers.ModelSerializer):
-    cart_id = serializers.SerializerMethodField()
-    status = serializers.CharField(default='PENDING')
-    created_on = serializers.DateTimeField()
-    class Meta:
-        model = Cart
-        fields = [
-            'cart_id',
-            'order_item',
-            'color',
-            'size',
-            'status',
-            'quantity',
-            'total',
-            'created_on',
-        ]
+#         read_only_fields = ['cart_id']
 
-        read_only_fields = ['cart_id']
-
-    def get_cart_id(self, obj):
-        return obj.cart_id.username
-
-class UpdateCartDetailSerializer(serializers.ModelSerializer):
-    cart_id = serializers.SerializerMethodField()
-    class Meta:
-        model = Cart
-        fields = [
-            'cart_id',
-            'order_item',
-            'color',
-            'size',
-            'quantity',
-            'updated_on',
-        ]
-
-        read_only_fields = ['cart_id']
-
-    def get_cart_id(self, obj):
-        return obj.cart_id.username
+#     def get_cart_id(self, obj):
+#         return obj.cart_id.username
 
 
 
@@ -182,7 +207,51 @@ class CartStatusSerializer(serializers.ModelSerializer):
         model = Cart
         fields = [
             'status',
+            'updated_on',
+
         ]
+
+
+
+class CartProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'name',
+            'discount_percent',
+            'current_price',
+            'image1',
+        ]
+
+class CartItemSerializer(serializers.ModelSerializer):
+    product = CartProductSerializer(read_only=True)
+    class Meta:
+        model = CartItem
+        fields = [
+            'cart',
+            'product',
+            'quantity',
+        ]
+
+class CartItemMiniSerializer(serializers.ModelSerializer):
+    product = CartProductSerializer(required = False, read_only=True)
+    class Meta:
+        model = CartItem
+        fields = ['product', 'quantity','color', 'size',]
+
+class CartItemUpdateSerializer(serializers.ModelSerializer):
+    model = CartItem
+    fields = ['product', 'quantity', ]
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -190,10 +259,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            'address',
-            'zipcode',
-            'country',
-            'state',
+            'phone_number',
             'gender',
             'created_on',
             'updated_on',

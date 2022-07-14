@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Cart, Category, Color, Product, ProductReview, Profile, Profile, Size
+from .models import Address, Cart, CartItem, Category, Color, Product, ProductReview, Profile, Profile, Shipping, Size
 
 
 
@@ -24,19 +24,26 @@ class ProductReviewAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'review', 'product', 'rating', 'created_on',)
 
 
-class CartAdmin(admin.ModelAdmin):
-    list_filter = ('cart_id', 'created_on',)
-    list_display = ('cart_id', 'quantity','total', 'created_on',)
+class CartItemAdmin(admin.ModelAdmin):
+    list_filter = ('cart', 'created_on',)
+    list_display = ('cart', 'quantity', 'shipping', 'total', 'grand_total', 'created_on',)
 
 
 
-admin.site.register(Cart, CartAdmin)
+
+# admin.site.register(Cart, CartAdmin)
 admin.site.register(Category)
 admin.site.register(Color)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductReview,  ProductReviewAdmin)
 admin.site.register(Size)
 admin.site.register(Profile)
+admin.site.register(Shipping)
+
+admin.site.register(Address)
+
+admin.site.register(Cart)
+admin.site.register(CartItem, CartItemAdmin)
 
 
 
