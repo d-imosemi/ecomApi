@@ -1,22 +1,21 @@
 from rest_framework.response import Response
-from rest_framework import generics, status, permissions
+from rest_framework import generics, status, permissions, exceptions
 from rest_framework import filters
 from django.contrib.auth import get_user_model
 from .serializers import *
 from .models import *
-
-
-
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import (
     ListCreateAPIView,
-    ListAPIView,
     RetrieveUpdateDestroyAPIView,
     CreateAPIView,
     RetrieveAPIView,
 )
 from rest_framework.exceptions import NotAcceptable, ValidationError, PermissionDenied
 from rest_framework.views import APIView
+
+from django.utils.decorators import method_decorator
+from .decorators import time_calculator
 
 
 User = get_user_model()
@@ -209,77 +208,6 @@ class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-# CART-------ENDPOINT-----------START
-
-
-# class CreateCart(generics.CreateAPIView):
-#     queryset = Cart.objects.all()
-#     serializer_class = CreateUpdateCartDetailSerializer
-#     # permission_classes = [permissions.IsAuthenticated]
-
-#     def perform_create(self, serializer):
-#         serializer.save(cart_id=self.request.user)
-
-# class ListCart(generics.ListAPIView):
-#     queryset = Cart.objects.all()
-#     serializer_class = CartDetailSerializer
-#     # permission_classes = [permissions.IsAdminUser]
-
-# class DeleteDetailCart(generics.DestroyAPIView):
-#     queryset = Cart.objects.all()
-#     serializer_class = CartDetailSerializer
-#     # permission_classes = [permissions.IsAuthenticated]
-
-#     def perform_update(self, serializer):
-#         serializer.save(cart_id=self.request.user)
-
-# class UpdateDetailCart(generics.UpdateAPIView):
-#     queryset = Cart.objects.all()
-#     serializer_class = CreateUpdateCartDetailSerializer
-#     http_method_names = ['get', 'post', 'put']
-#     # permission_classes = [permissions.IsAuthenticated]
-
-#     def perform_update(self, serializer):
-#         serializer.save(cart_id=self.request.user)
-
-# class UpdateCartStatus(generics.UpdateAPIView):
-#     queryset = Cart.objects.all()
-#     serializer_class = CartStatusSerializer
-#     http_method_names = ['get', 'put']
-#     permission_classes = [permissions.IsAdminUser]
-
-
-# class UserOrdersView(generics.GenericAPIView):
-#     serializer_class = CartDetailSerializer
-#     queryset = Cart.objects.all()
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get(self, request, user_pk):
-#         user = User.objects.get(pk=user_pk)
-
-#         carts = Cart.objects.all().filter(cart_id=user)
-
-#         serializer = self.serializer_class(instance=carts, many=True)
-
-#         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-
-# class UserOrdersDetail(generics.GenericAPIView):
-#     serializer_class = CartDetailSerializer
-#     queryset = Cart.objects.all()
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get(self, request, user_pk, order_pk):
-#         user = User.objects.get(pk=user_pk)
-
-#         carts = Cart.objects.all().filter(cart_id=user).get(pk=order_pk)
-
-#         serializer = self.serializer_class(instance=carts)
-
-#         return Response(data=serializer.data, status=status.HTTP_200_OK)
-# CART-------ENDPOINT-----------END
-
-
 
 # PROFILE-------ENDPOINT-----------STATRT
 
@@ -296,7 +224,11 @@ class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
 # PROFILE-------ENDPOINT-----------END
 
 
-
+class UpdateCartStatus(generics.RetrieveUpdateAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartStatusSerializer
+    http_method_names = ['get', 'put']
+    permission_classes = [permissions.IsAdminUser]
 
 
 
@@ -401,6 +333,52 @@ class CartItemView(RetrieveUpdateDestroyAPIView):
 
 
 
+# ORDER-------ENDPOINT-----------END
+
+
+class OrderView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @time_calculator
+    def time(self):
+        return 0
+
+    def post(self, request, pk, *args, **kwargs):
+        user = request.user
+        user_address = Address.objects.filter(user_id=user).first()
+        product = get_object_or_404(Product, pk=pk)
+        if product.stock == 0:
+            raise exceptions.NotAcceptable("No Product available")
+        try:
+            order_number = request.data.get("order_number", 1)
+            quantity = request.data.get("quantity", 1)
+        except:
+            pass
+
+        total = quantity * product.current_price
+        order = Order().create_order(user, order_number, user_address, True)
+        order_item = OrderItem().create_order_item(order, product, quantity, total)
+        serializer = OrderItemMiniSerializer(order_item)
+        # push_notifications(
+        #     user,
+        #     "Request Order",
+        #     "your order: #" + str(order_number) + " has been sent successfully.",
+        # )
+        self.time()
+        # TODO Payment Integration here.
+        # TODO send Email to seller and buyer
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+def Payment(request):
+    return render(request, "payment/payment.html", {})
+
+
+# ORDER-------ENDPOINT-----------END
+
+
+
+
 
 # CHECKOUT-------ENDPOINT-----------START
 
@@ -461,3 +439,7 @@ class CheckoutCartView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 # CHECKOUT-------ENDPOINT-----------END
+
+
+
+

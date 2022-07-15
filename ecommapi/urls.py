@@ -42,15 +42,10 @@ urlpatterns = [
     path('singlecheckout/<int:pk>/', CheckoutView.as_view()),
     path('cart/checkout/<int:pk>/', CheckoutCartView.as_view()),
 
+    path('update_order_status/<int:pk>/', UpdateCartStatus.as_view()),
 
-    # path('list_carts/', ListCart.as_view(), name='list_carts'),
-    #     
-
-    # path('cart/update-status/<int:pk>/', UpdateCartStatus.as_view(), name='cartstatus'),
-
-    # path('user/<int:user_pk>/orders/', UserOrdersView.as_view(), name='user-cart'),
-
-    # path('user/<int:user_pk>/order/<int:order_pk>/', UserOrdersDetail.as_view(), name='singleusercart'),
+    path("order/<int:pk>/", OrderView.as_view()),
+    path("payment/", Payment),
 
 
     path('profile/<int:pk>', DetailProfile.as_view(), name='singleprofile'),

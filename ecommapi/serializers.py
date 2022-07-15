@@ -1,3 +1,4 @@
+from accounts.serializers import MainUserSerializer
 from rest_framework import serializers
 from .models import *
 
@@ -147,68 +148,13 @@ class CheckoutSerializer(serializers.ModelSerializer):
     
 
 
-# class CartDetailSerializer(serializers.ModelSerializer):
-#     color = ColorSerializer(many=True, read_only=True)
-#     size = SizeSerializer(many=True, read_only=True)
-#     order_item = ProductCreateCartSerializer()
-#     cart_id = serializers.SerializerMethodField()
-#     status = serializers.CharField(default='PENDING')
-#     created_on = serializers.DateTimeField()
-#     grand_total = serializers.SerializerMethodField()
-#     class Meta:
-#         model = Cart
-#         fields = [
-#             'cart_id',
-#             'order_item',
-#             'color',
-#             'size',
-#             'status',
-#             'quantity',
-#             'total',
-#             'created_on',
-#             'grand_total',
-#         ]
-
-#         read_only_fields = ['cart_id']
-
-#     def get_cart_id(self, obj):
-#         return obj.cart_id.username
-    
-#     def get_grand_total(self, obj):
-#         return CheckoutSerializer(obj.grand_total()).data
-
-
-
-
-# class CreateUpdateCartDetailSerializer(serializers.ModelSerializer):
-#     cart_id = serializers.SerializerMethodField()
-#     class Meta:
-#         model = Cart
-#         fields = [
-#             'cart_id',
-#             'order_item',
-#             'color',
-#             'size',
-#             'quantity',
-#             'shipping_location',
-#             'created_on',
-#             'updated_on',
-#         ]
-
-#         read_only_fields = ['cart_id']
-
-#     def get_cart_id(self, obj):
-#         return obj.cart_id.username
-
-
-
 class CartStatusSerializer(serializers.ModelSerializer):
      class Meta:
-        model = Cart
+        model = Order
         fields = [
             'status',
+            'is_paid',
             'updated_on',
-
         ]
 
 
@@ -224,7 +170,7 @@ class CartProductSerializer(serializers.ModelSerializer):
         ]
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = CartProductSerializer(read_only=True)
+    product = CartProductSerializer()
     class Meta:
         model = CartItem
         fields = [
@@ -239,19 +185,10 @@ class CartItemMiniSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ['product', 'quantity','color', 'size',]
 
+
 class CartItemUpdateSerializer(serializers.ModelSerializer):
     model = CartItem
     fields = ['product', 'quantity', ]
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -265,3 +202,42 @@ class ProfileSerializer(serializers.ModelSerializer):
             'updated_on',
         ]
        
+
+
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        exclude = ["updated_on",]
+
+
+class OrderMiniSerializer(serializers.ModelSerializer):
+    address = AddressSerializer(required=False)
+    user = MainUserSerializer(required=False)
+
+    class Meta:
+        model = Order
+        exclude = ["updated_on",]
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        exclude = ["updated_on",]
+
+
+class OrderItemMiniSerializer(serializers.ModelSerializer):
+    order = OrderMiniSerializer(required=False, read_only=True)
+    product = CartProductSerializer(required=False, read_only=True)
+
+    class Meta:
+        model = OrderItem
+        exclude = ["updated_on",]
+
+
+
+
+
+
+
