@@ -243,8 +243,6 @@ class Profile(models.Model):
         ('MALE', 'Male'),
         ('FEMALE', 'Female')
     )
-
-
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)
     gender = models.CharField(choices=GENDER, max_length=20)
     phone_number = PhoneNumberField(null=False, unique=True)

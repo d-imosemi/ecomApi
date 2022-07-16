@@ -28,11 +28,10 @@ urlpatterns = [
 
     # path("addresses/", ListAddressAPIView.as_view()),
     path("address/<int:pk>/", AddressDetailView.as_view()),
-    path("create/address/", createAddressAPIView.as_view()),
 
 
     path('productreview/', CreateProductReview.as_view(), name='productreview'),
-    # path('list_productreviews/', ListProductReview.as_view(), name='list_productreviews'),
+    path('list_productreviews/', ListProductReview.as_view(), name='list_productreviews'),
     path('productreview/<int:pk>/', DetailProductReview.as_view(), name='singleproductreview'),
 
 

@@ -21,7 +21,6 @@ def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 # ADDRESS-------SIGNALS
-
 @receiver(post_save, sender = User)
 def create_address(sender, instance, created, **kwargs):
     if created:
@@ -36,7 +35,6 @@ def save_address(sender, instance, **kwargs):
 
 
 # CART-------SIGNALS
-
 @receiver(post_save, sender = User)
 def create_cart(sender, instance, created, **kwargs):
     if created:

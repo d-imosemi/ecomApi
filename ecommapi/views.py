@@ -115,20 +115,15 @@ class DetailSize(generics.RetrieveUpdateDestroyAPIView):
 
 # ADDRESS-------ENDPOINT-----------END
 
-# class ListAddressAPIView(ListAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
-#     serializer_class = AddressSerializer
 
-#     def get_queryset(self):
-#         user = self.request.user
-#         queryset = Address.objects.filter(user=user)
-#         return queryset
-
-
-class AddressDetailView(RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = AddressSerializer
+class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    http_method_names = ['get', 'put',]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_update(self, serializer):
+        serializer.save(user_id=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
         user = request.user
@@ -139,16 +134,6 @@ class AddressDetailView(RetrieveAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class createAddressAPIView(CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = CreateAddressSerializer
-    queryset = ""
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user, primary=True)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # ADDRESS-------ENDPOINT-----------END
 
@@ -189,10 +174,10 @@ class CreateProductReview(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
 
-# class ListProductReview(generics.ListAPIView):
-#     queryset = ProductReview.objects.all()
-#     serializer_class = ProductReviewSerializer
-#     permission_classes = [permissions.AllowAny]
+class ListProductReview(generics.ListAPIView):
+    queryset = ProductReview.objects.all()
+    serializer_class = ProductReviewSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
@@ -215,7 +200,7 @@ class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
 class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    http_method_names = ['get', 'put', 'delete']
+    http_method_names = ['get', 'put',]
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
@@ -227,7 +212,7 @@ class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
 class UpdateCartStatus(generics.RetrieveUpdateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartStatusSerializer
-    http_method_names = ['get', 'put']
+    http_method_names = ['put']
     permission_classes = [permissions.IsAdminUser]
 
 
@@ -260,8 +245,8 @@ class CartItemAPIView(ListCreateAPIView):
         except Exception as e:
             raise ValidationError("Please Enter Your Quantity")
 
-        if quantity > product.quantity:
-            raise NotAcceptable("You order quantity more than the seller have")
+        if quantity > product.stock:
+            raise NotAcceptable("You order quantity is more than the seller have")
 
         cart_item = CartItem(cart=cart, product=product, quantity=quantity)
         cart_item.save()
@@ -280,7 +265,7 @@ class CartItemAPIView(ListCreateAPIView):
 
 class CartItemView(RetrieveUpdateDestroyAPIView):
     serializer_class = CartItemSerializer
-    
+    http_method_names = ['get', 'put', 'delete',]
     queryset = CartItem.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
@@ -387,7 +372,8 @@ class CheckoutView(APIView):
 
     def get(self, request, pk, *args, **kwargs):
         user = request.user
-        address_id = request.data.get("address")
+        # address_id = request.data.get("address")
+        user_address = Address.objects.filter(user_id=user).first()
         # user_address = Address.objects.filter(id=address_id, user_id=user)[0]
         product = get_object_or_404(Product, pk=pk)
         
@@ -397,11 +383,11 @@ class CheckoutView(APIView):
             ecommerce_fees = item.shipping
         total = ecommerce_fees + (product.current_price * item.quantity)
         data = {}
-        # data["address"] = AddressSerializer(user_address).data
+        data["address"] = AddressSerializer(user_address).data
         data["product"] = ProductCreateCartSerializer(
             product, context={"request": request}
         ).data
-        data["Shipping fee"] = ecommerce_fees
+        data["Shipping Fee"] = ecommerce_fees
         data["total"] = total
 
         return Response(data, status=status.HTTP_200_OK)
@@ -412,10 +398,11 @@ class CheckoutCartView(APIView):
 
     def get(self, request, pk, *args, **kwargs):
         user = request.user
-        address_id = request.data.get("address")
+        # address_id = request.data.get("address")
         data = {}
         total = 0
         quantity = 0
+        user_address = Address.objects.filter(user_id=user).first()
         # user_address = Address.objects.filter(id=address_id, user_id=user)[0]
         cart = get_object_or_404(Cart, user=user)
         cart_items = CartItem.objects.filter(cart=cart)
@@ -430,7 +417,7 @@ class CheckoutCartView(APIView):
                 end_total =  ecommerce_fees + (total)
 
 
-        # data["address"] = AddressSerializer(user_address).data
+        data["address"] = AddressSerializer(user_address).data
         data["items"] = CartItemMiniSerializer(cart_items, many=True).data
         data["Shipping fee"] = ecommerce_fees
         if quantity >= 10:

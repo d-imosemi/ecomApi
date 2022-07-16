@@ -170,26 +170,27 @@ class CartProductSerializer(serializers.ModelSerializer):
         ]
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = CartProductSerializer()
+    product = CartProductSerializer(required = False, read_only=True)
     class Meta:
         model = CartItem
         fields = [
             'cart',
             'product',
             'quantity',
+            'color',
+            'size',
         ]
 
 class CartItemMiniSerializer(serializers.ModelSerializer):
     product = CartProductSerializer(required = False, read_only=True)
     class Meta:
         model = CartItem
-        fields = ['product', 'quantity','color', 'size',]
-
+        fields = ['product', 'quantity', 'color', 'size',]
 
 class CartItemUpdateSerializer(serializers.ModelSerializer):
-    model = CartItem
-    fields = ['product', 'quantity', ]
-
+    class Meta:
+        model = CartItem
+        fields = ['product', 'quantity', 'color', 'size',]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
