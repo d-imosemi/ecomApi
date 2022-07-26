@@ -42,13 +42,23 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    GENDER = (
+        ('MALE', 'Male'),
+        ('FEMALE', 'Female')
+    )
+    gender = models.CharField(choices=GENDER, max_length=20, null=True, blank=True)
     username = models.CharField(max_length=25, unique=True)
     email = models.EmailField(max_length=80, unique=True)
     phone_number = PhoneNumberField(null=False, unique=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
 
     USERNAME_FIELD = 'email'
 
     REQUIRED_FIELDS = ['username', 'phone_number']
+    
+    objects = CustomUserManager()
 
     def __str__(self):
         return f"User {self.email}"

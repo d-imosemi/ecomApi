@@ -61,9 +61,6 @@ class Product(models.Model):
     sku = models.CharField(max_length=10, blank=True, null=True)
     color = models.ManyToManyField(Color, blank=True)
     size = models.ManyToManyField(Size, blank=True)
-    author = models.CharField(max_length=100, blank=True)
-    isbn = models.CharField(max_length=13, blank=True, null=True)
-    pages = models.PositiveIntegerField(default=0, blank=True, null=True)
     description = models.TextField(max_length=250)
     image1 = models.URLField()
     image2 = models.URLField(null=True, blank=True)
@@ -235,22 +232,4 @@ class ProductReview(models.Model):
     class Meta:
         ordering = ['user_id', '-created_on']
 
-
-
-class Profile(models.Model):
-
-    GENDER = (
-        ('MALE', 'Male'),
-        ('FEMALE', 'Female')
-    )
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
-    gender = models.CharField(choices=GENDER, max_length=20)
-    phone_number = PhoneNumberField(null=False, unique=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-
-
-    def __str__(self):
-        return str(self.user_id)
-    
 

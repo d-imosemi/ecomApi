@@ -13,7 +13,7 @@ class ProductReviewInline(admin.StackedInline):
 
 class ProductAdmin(admin.ModelAdmin):
     list_filter = ('name', 'updated_on', 'created_on',)
-    list_display = ('name', 'category', 'author', 'initial_price', 'current_price', 'stock',)
+    list_display = ('name', 'category', 'initial_price', 'current_price', 'stock',)
     inlines = [
             ProductReviewInline,
         ]
@@ -36,7 +36,6 @@ admin.site.register(Color)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductReview,  ProductReviewAdmin)
 admin.site.register(Size)
-admin.site.register(Profile)
 admin.site.register(Shipping)
 
 admin.site.register(Address)

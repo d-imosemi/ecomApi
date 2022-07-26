@@ -47,5 +47,4 @@ urlpatterns = [
     path("payment/", Payment),
 
 
-    path('profile/<int:pk>', DetailProfile.as_view(), name='singleprofile'),
 ]

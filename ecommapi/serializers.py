@@ -66,9 +66,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'sku',
             'color',
             'size',
-            'author',
-            'isbn',
-            'pages',
             'description',
             'image1',
             'image2',
@@ -96,9 +93,6 @@ class ListProductSerializer(serializers.ModelSerializer):
             'sku',
             'color',
             'size',
-            'author',
-            'isbn',
-            'pages',
             'description',
             'image1',
             'image2',
@@ -191,17 +185,6 @@ class CartItemUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ['product', 'quantity', 'color', 'size',]
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = [
-            'phone_number',
-            'gender',
-            'created_on',
-            'updated_on',
-        ]
        
 
 

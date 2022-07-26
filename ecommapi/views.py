@@ -193,22 +193,6 @@ class DetailProductReview(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-
-# PROFILE-------ENDPOINT-----------STATRT
-
-
-class DetailProfile(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-    http_method_names = ['get', 'put',]
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_update(self, serializer):
-        serializer.save(user_id=self.request.user)
-
-# PROFILE-------ENDPOINT-----------END
-
-
 class UpdateCartStatus(generics.RetrieveUpdateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartStatusSerializer

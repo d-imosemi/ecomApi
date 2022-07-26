@@ -23,7 +23,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 class MainUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', "first_name", "last_name", 'phone_number')
+        fields = ('id', 'username', 'email', "first_name", "last_name", 'gender', 'phone_number', 'updated_on', 'created_on')
 
 
 # Register Serializer
